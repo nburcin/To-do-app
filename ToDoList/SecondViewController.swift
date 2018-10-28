@@ -27,6 +27,16 @@ class SecondViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func addBtnPressed(_ sender: Any) {
+        let itemsObject = UserDefaults.standard.object(forKey: "items")
+        var items : [String]
+        if let tempItems = itemsObject as? [String] {
+            items = tempItems
+            items.append(addTextField.text!)
+        } else {
+            items = [addTextField.text!]
+        }
+        UserDefaults.standard.set(items, forKey: "items")
+        addTextField.text = ""
     }
     
 }

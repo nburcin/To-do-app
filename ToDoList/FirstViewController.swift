@@ -9,12 +9,16 @@
 import UIKit
 
 class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    var items : [String] = []
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cell")
+        cell.textLabel?.text = items[indexPath.row]
         return cell
     }
     
@@ -22,9 +26,23 @@ class FirstViewController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBOutlet weak var toDoTable: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
 
-
+    override func viewDidAppear(_ animated: Bool) {
+        let itemsObject = UserDefaults.standard.object(forKey: "items")
+        if let tempItems = itemsObject as? [String] {
+            items = tempItems
+        }
+        toDoTable.reloadData()
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == UITableViewCell.EditingStyle.delete {
+            items.remove(at: indexPath.row)
+            toDoTable.reloadData()
+            UserDefaults.standard.set(items, forKey: "items")
+        }
+    }
+    
 }
 
